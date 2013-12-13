@@ -13,33 +13,53 @@
 function roots_scripts() {
   wp_enqueue_style('roots_main', get_template_directory_uri() . '/assets/css/main.min.css', false, '6c39f42987ae297a5a21e2bb35bf3402');
 
-  // jQuery is loaded using the same method from HTML5 Boilerplate:
-  // Grab Google CDN's latest jQuery with a protocol relative URL; fallback to local if offline
-  // It's kept in the header instead of footer to avoid conflicts with plugins.
-  if (!is_admin() && current_theme_supports('jquery-cdn')) {
-    wp_deregister_script('jquery');
-    wp_register_script('jquery', '//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js', false, null, false);
-    add_filter('script_loader_src', 'roots_jquery_local_fallback', 10, 2);
-  }
-
-  if (is_single() && comments_open() && get_option('thread_comments')) {
-    wp_enqueue_script('comment-reply');
-  }
-
   wp_register_script('modernizr', get_template_directory_uri() . '/assets/js/vendor/modernizr-2.7.0.min.js', false, null, false);
   wp_register_script('roots_scripts', get_template_directory_uri() . '/assets/js/scripts.min.js', false, '01d073428e4e54f227f8a0a3bad4b804', true);
+
   wp_enqueue_script('modernizr');
-  wp_enqueue_script('jquery');
-  wp_enqueue_script('roots_scripts');
 }
 add_action('wp_enqueue_scripts', 'roots_scripts', 100);
+
+function roots_footer_includes() {
+  //If using the Assembly RequireJS Plugin deregister loading of jQuery
+  if (!is_admin() && current_theme_supports('requireJS')) {
+    wp_deregister_script('jquery');
+    wp_enqueue_script('require', get_template_directory_uri() . '/assets/bower_components/requirejs/require.js', false, null, true);
+  } else {
+     wp_deregister_script('jquery');
+     wp_register_script('jquery', '//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js', false, null, true);
+     add_filter('script_loader_src', 'roots_jquery_local_fallback', 10, 2);
+  }
+
+  wp_enqueue_script('roots_scripts');
+}
+
+/*
+Add on 'data-main' to load the main file asynchronously
+- If ?rq_debug is in the url, then load the app file (requires in scripts dynamically)
+- If ?rq_debug not in url, then load minified plugin
+*/    
+function fix_requirejs_script($url) {
+  if (strpos ($url, 'bower_components/requirejs')){
+    if (isset($_GET['rq_debug'])){
+      return "$url' data-main='".get_template_directory_uri()."/assets/js/main";
+    } else {
+      return "$url' data-main='".get_template_directory_uri()."/assets/js/main.min";
+    }         
+  } else {
+    return $url;
+  }
+}
+
+add_action('wp_enqueue_scripts', 'roots_footer_includes', 100, true);
+add_filter('clean_url', 'fix_requirejs_script', 11, 1);
 
 // http://wordpress.stackexchange.com/a/12450
 function roots_jquery_local_fallback($src, $handle = null) {
   static $add_jquery_fallback = false;
 
   if ($add_jquery_fallback) {
-    echo '<script>window.jQuery || document.write(\'<script src="' . get_template_directory_uri() . '/assets/js/vendor/jquery-1.10.2.min.js"><\/script>\')</script>' . "\n";
+    echo '<script>window.jQuery || document.write(\'<script src="' . get_template_directory_uri() . '/assets/js/bower_components/jquery/jquery.min.js"><\/script>\')</script>' . "\n";
     $add_jquery_fallback = false;
   }
 
@@ -49,7 +69,7 @@ function roots_jquery_local_fallback($src, $handle = null) {
 
   return $src;
 }
-add_action('wp_head', 'roots_jquery_local_fallback');
+add_action('wp_footer', 'roots_jquery_local_fallback');
 
 function roots_google_analytics() { ?>
 <script>

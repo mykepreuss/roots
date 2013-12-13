@@ -1,14 +1,14 @@
 {
-  "name": "roots",
-  "version": "6.5.1",
-  "author": "Ben Word <ben@benword.com>",
-  "homepage": "http://roots.io",
+  "name": "Assembly Roots Fork",
+  "version": "0.0.1",
+  "author": "Myke Preuss <myke@waytoogood.ca>",
+  "homepage": "http://assemblydigital.com",
   "repository": {
     "type": "git",
-    "url": "git://github.com/roots/roots.git"
+    "url": "git://github.com/mykepreuss/roots.git"
   },
   "bugs": {
-    "url" : "https://github.com/roots/roots/issues"
+    "url" : "https://github.com/mykepreuss/roots/issues"
   },
   "licenses": [{
     "type": "MIT",
@@ -23,7 +23,10 @@
     "grunt-contrib-jshint": "~0.6.4",
     "grunt-contrib-uglify": "~0.2.4",
     "grunt-contrib-watch": "~0.5.3",
-    "grunt-contrib-less": "~0.8.1",
-    "grunt-wp-version": "~0.1.0"
+    "grunt-contrib-less": "~0.8.2",
+    "grunt-wp-version": "~0.1.0",
+    "grunt-browser-sync": "~0.2.6",
+    "grunt-contrib-requirejs": "~0.4.1",
+    "grunt-contrib-copy": "~0.4.1"    
   }
 }

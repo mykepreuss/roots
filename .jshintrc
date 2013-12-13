@@ -7,10 +7,20 @@
   "esnext": true,
   "immed": true,
   "jquery": true,
+  "globals": {
+    "_": true
+  }.
+  "indent": 4,
   "latedef": true,
   "newcap": true,
   "noarg": true,
   "node": true,
   "strict": false,
-  "trailing": true
+  "smarttabs": true,
+  "trailing": true,
+  "quotmark": "single",
+  "regexp": true,
+  "undef": true,
+  "unused": true,
+  "trailing": true,  
 }
