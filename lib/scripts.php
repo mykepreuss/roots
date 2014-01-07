@@ -12,7 +12,7 @@
  */
 function roots_scripts() {
   //enqueuing modernizr
-  wp_register_script('modernizr', get_template_directory_uri() . '/assets/js/bower_components/modernizr.js', false, null, false);
+  wp_register_script('modernizr', get_template_directory_uri() . '/assets/bower_components/modernizr/modernizr.js', false, null, false);
 
   wp_enqueue_script('modernizr');
 }
@@ -34,16 +34,10 @@ function roots_footer_includes() {
 
 /*
 Add on 'data-main' to load the main file asynchronously
-- If ?rq_debug is in the url, then load the app file (requires in scripts dynamically)
-- If ?rq_debug not in url, then load minified plugin
-*/    
+*/
 function fix_requirejs_script($url) {
   if (strpos ($url, 'bower_components/requirejs')){
-    if (isset($_GET['rq_debug'])){
       return "$url' data-main='".get_template_directory_uri()."/assets/js/main";
-    } else {
-      return "$url' data-main='".get_template_directory_uri()."/assets/js/main.min";
-    }         
   } else {
     return $url;
   }
