@@ -7,4 +7,6 @@
   </div>
 </footer>
 
-<?php wp_footer(); ?>
+<?php
+include('partials/browser_sync.php');
+wp_footer(); ?>
